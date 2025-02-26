@@ -4,6 +4,8 @@ from google.oauth2 import service_account
 import googleapiclient.discovery
 from utils import exists_file, upload_file, delete_file
 
+load_dotenv()
+
 if len(sys.argv) < 2:
     exit("Please input path argument")
 arg_path = sys.argv[1]
@@ -25,14 +27,13 @@ head, tail = os.path.split(latest_file)
 path = head + "/" + tail
 filename = tail
 
-load_dotenv()
-
 GDRIVE_SHARE_EMAIL = os.getenv("GDRIVE_SHARE_EMAIL")
 if GDRIVE_SHARE_EMAIL is None:
     exit("Please input GDRIVE_SHARE_EMAIL environment")
 GDRIVE_AUTH = os.getenv("GDRIVE_AUTH")
 if GDRIVE_AUTH is None:
     exit("Please input GDRIVE_AUTH environment")
+GDRIVE_AUTH = r'{}'.format(GDRIVE_AUTH.encode("raw_unicode_escape")).replace("b'", "")[:-1]
 
 service_account_info = json.loads(GDRIVE_AUTH)
 SCOPES = ["https://www.googleapis.com/auth/drive"]
